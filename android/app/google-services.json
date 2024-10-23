@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "937697260865",
+    "project_id": "horizon-chatapp",
+    "storage_bucket": "horizon-chatapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:937697260865:android:a5e7438a6b81e66643ddc0",
+        "android_client_info": {
+          "package_name": "com.example.horizon"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDh5-U3sJpSj5JbQcf4hyCZAb1Eq1Zrb5s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:937697260865:android:0f3e1cd8e95f9a1d43ddc0",
+        "android_client_info": {
+          "package_name": "com.horizon.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDh5-U3sJpSj5JbQcf4hyCZAb1Eq1Zrb5s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

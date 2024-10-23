@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:horizon/service/gradienttext.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class NotesPage extends StatefulWidget {
+class HorizonNotes extends StatefulWidget {
+  const HorizonNotes({super.key});
+
   @override
-  _NotesPageState createState() => _NotesPageState();
+  State<HorizonNotes> createState() => _HorizonNotesState();
 }
 
-class _NotesPageState extends State<NotesPage> {
+class _HorizonNotesState extends State<HorizonNotes> {
   List<String> _notes = [];
-  TextEditingController _noteController = TextEditingController();
+  final GlobalKey<ScaffoldState> key = GlobalKey();
+
+  final TextEditingController _noteController = TextEditingController();
 
   @override
   void initState() {
@@ -31,7 +36,7 @@ class _NotesPageState extends State<NotesPage> {
   }
 
   // Add a new note
-  void _addNote() {
+  void addNote() {
     if (_noteController.text.isNotEmpty) {
       setState(() {
         _notes.add(_noteController.text);
@@ -42,7 +47,7 @@ class _NotesPageState extends State<NotesPage> {
   }
 
   // Delete a note
-  void _deleteNote(int index) {
+  void deleteNote(int index) {
     setState(() {
       _notes.removeAt(index);
     });
@@ -53,18 +58,23 @@ class _NotesPageState extends State<NotesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notes'),
+        title: const GradientText(
+          "Horizon Notes",
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          gradient: LinearGradient(
+              colors: [Color.fromRGBO(228, 212, 156, 1), Color(0xffad9c00)]),
+        ),
       ),
       body: Column(
-        children: <Widget>[
+        children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               controller: _noteController,
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 hintText: 'Enter a new note',
-                hintStyle: TextStyle(color: Colors.grey),
+                hintStyle: const TextStyle(color: Colors.grey),
                 filled: true,
                 fillColor: Colors.black54,
                 border: OutlineInputBorder(
@@ -74,8 +84,8 @@ class _NotesPageState extends State<NotesPage> {
             ),
           ),
           ElevatedButton(
-            onPressed: _addNote,
-            child: Text('Add Note'),
+            onPressed: addNote,
+            child: const Text('Add Note'),
           ),
           Expanded(
             child: ListView.builder(
@@ -84,11 +94,11 @@ class _NotesPageState extends State<NotesPage> {
                 return ListTile(
                   title: Text(
                     _notes[index],
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   ),
                   trailing: IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
-                    onPressed: () => _deleteNote(index),
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    onPressed: () => deleteNote(index),
                   ),
                 );
               },

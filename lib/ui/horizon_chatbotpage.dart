@@ -94,7 +94,7 @@ class _ChatScreenState extends State<ChatScreen> {
           SizedBox(
             width: 60,
             height: 60,
-            child: Image.asset("assets/Horizon-Thumbnail-1024x576.webp"),
+            child: Image.asset("assets/Horizon-Thumbnail-1024x576 copy.png"),
           ),
           const SizedBox(
             width: 20,
@@ -163,7 +163,8 @@ class _ChatScreenState extends State<ChatScreen> {
               controller: _controller,
               decoration: InputDecoration(
                 hintText: 'Type a message...',
-                hintStyle: const TextStyle(color: Colors.grey),
+                hintStyle:
+                    const TextStyle(color: Color.fromARGB(255, 24, 23, 23)),
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(
@@ -185,40 +186,5 @@ class _ChatScreenState extends State<ChatScreen> {
         ],
       ),
     );
-  }
-
-  customimagegen(img) {
-    return img != null
-        ? Container(
-            alignment: Alignment.center,
-            height: 320,
-            width: 320,
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.white, width: 2),
-                borderRadius: BorderRadius.circular(
-                  12.0,
-                )),
-            child: Image.memory(img,
-                frameBuilder: ((context, child, frame, wasSynchronouslyLoaded) {
-              if (wasSynchronouslyLoaded) return child;
-              return AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
-                  child: frame != null
-                      ? child
-                      : const SizedBox(
-                          height: 60,
-                          width: 60,
-                          child: CircularProgressIndicator(strokeWidth: 6),
-                        ));
-            })))
-        : Container(
-            alignment: Alignment.center,
-            height: 320,
-            width: 320,
-            decoration: BoxDecoration(
-                color: const Color(0xff424242),
-                borderRadius: BorderRadius.circular(
-                  12.0,
-                )));
   }
 }

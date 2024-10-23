@@ -1,8 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:horizon/horizon_groupcall.dart';
-import 'package:horizon/horizon_homepage.dart';
+import 'package:horizon/Auth/horizon_login.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // initializing the firebase app
+  await Firebase.initializeApp();
+
+  // calling of runApp
+
   runApp(const MyApp());
 }
 
@@ -17,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark(
         useMaterial3: true,
       ),
-      home: const HorizonHomepage(),
+      home: SignInScreen(),
     );
   }
 }

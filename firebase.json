@@ -1,0 +1,1 @@
+{"flutter":{"platforms":{"android":{"default":{"projectId":"horizon-chatapp","appId":"1:937697260865:android:a5e7438a6b81e66643ddc0","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"horizon-chatapp","configurations":{"android":"1:937697260865:android:a5e7438a6b81e66643ddc0","ios":"1:937697260865:ios:bb222d620c666f1a43ddc0"}}}}}}
