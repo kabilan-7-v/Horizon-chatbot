@@ -50,18 +50,12 @@ class _HorizonIndividualchatpageState extends State<HorizonIndividualchatpage> {
         leading: const BackButton(
           color: Colors.white,
         ),
-
         title: GradientText(
           widget.name,
           style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           gradient: LinearGradient(
               colors: [Color.fromRGBO(228, 212, 156, 1), Color(0xffad9c00)]),
         ),
-        // title: Text(
-        //   'Leviosa ChatBot',
-        //   style:
-        //       TextStyle(color: Colors.amber[600], fontWeight: FontWeight.bold),
-        // ),
         actions: [
           SizedBox(
             width: 60,
@@ -69,7 +63,7 @@ class _HorizonIndividualchatpageState extends State<HorizonIndividualchatpage> {
             child: Image.asset("assets/Horizon-Thumbnail-1024x576 copy.png"),
           ),
           const SizedBox(
-            width: 20,
+            width: 21,
           )
         ],
       ),
