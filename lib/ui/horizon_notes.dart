@@ -58,6 +58,10 @@ class _HorizonNotesState extends State<HorizonNotes> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.black,
         title: const GradientText(
           "Horizon Notes",
           style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
@@ -91,14 +95,22 @@ class _HorizonNotesState extends State<HorizonNotes> {
             child: ListView.builder(
               itemCount: _notes.length,
               itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(
-                    _notes[index],
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
-                    onPressed: () => deleteNote(index),
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    tileColor: Colors.grey,
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 50,
+                    ),
+                    title: Text(
+                      _notes[index],
+                      style: const TextStyle(
+                          color: Color.fromARGB(255, 19, 16, 16)),
+                    ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () => deleteNote(index),
+                    ),
                   ),
                 );
               },

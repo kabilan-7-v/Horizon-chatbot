@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:horizon/service/gradienttext.dart';
+import 'package:horizon/ui/horizon__chooseusername.dart';
 import 'package:horizon/ui/horizon_homepage.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class SignInScreen extends StatefulWidget {
   SignInScreen({Key? key}) : super(key: key);
@@ -27,12 +30,26 @@ class _SignInScreenState extends State<SignInScreen> {
 
       // Getting users credential
       UserCredential result = await auth.signInWithCredential(authCredential);
-      print(result);
+      await OneSignal.User.addAlias(result.user!.uid, result.user!.uid);
+      await OneSignal.login(result.user!.uid);
 
+      final snap = await FirebaseFirestore.instance
+          .collection('Userdetails')
+          .doc(result.user!.email)
+          .get();
+      await FirebaseFirestore.instance
+          .collection('Userdetails')
+          .doc(result.user!.email)
+          .set({"uid": result.user!.uid, "email": result.user!.email},
+              SetOptions(merge: true));
+
+      if (snap.data() == null) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => Choseeusername()));
+        return;
+      }
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => HorizonHomepage()));
-      return; // if result not null we simply call the MaterialpageRoute,
-      // for go to the HomePage screen
     }
   }
 

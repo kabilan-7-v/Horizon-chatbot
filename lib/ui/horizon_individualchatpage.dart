@@ -1,110 +1,106 @@
-import 'package:flutter/material.dart';
-import 'package:horizon/service/gradienttext.dart';
+// import 'dart:math';
 
-class HorizonIndividualchatpage extends StatefulWidget {
-  const HorizonIndividualchatpage({
-    super.key,
-    required this.name,
-  });
-  final String name;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:horizon/chatservice/chatservice.dart';
+import 'package:horizon/chatservice/chatbubble.dart';
+// import 'package:kabisinsta/Authpage/Auth_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+
+class Individualchat extends StatefulWidget {
+  Individualchat(
+      {super.key,
+      required this.username,
+      required this.profilepic,
+      required this.receiverID,
+      required this.receiveremail});
+
+  final String receiverID;
+  final String receiveremail;
+  final String username;
+  final String profilepic;
 
   @override
-  State<HorizonIndividualchatpage> createState() =>
-      _HorizonIndividualchatpageState();
+  State<Individualchat> createState() => _IndividualchatState();
 }
 
-class _HorizonIndividualchatpageState extends State<HorizonIndividualchatpage> {
-  final TextEditingController _controller = TextEditingController();
-  final List _messages = [];
-  String text = "";
+class _IndividualchatState extends State<Individualchat> {
+  final TextEditingController _messagecontroller = TextEditingController();
 
-  // Replace this with your actual API key
+  final ChatService _chatService = ChatService();
 
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
-  }
-
-  _sendMessage() async {
-    FocusScope.of(context).unfocus();
-
-    setState(() {
-      text = _controller.text;
-    });
-    _controller.clear();
-
-    if (text != "") {
-      setState(() {
-        _messages.insert(0, {'text': text, 'sender': 'user', 'image': false});
-      });
+  void sendmessage() async {
+    if (_messagecontroller.text.isNotEmpty) {
+      await _chatService.sendmessage(
+          widget.username, widget.receiverID, _messagecontroller.text);
+      _messagecontroller.clear();
     }
   }
 
+  List allchatbubble = [];
+  String senderID = FirebaseAuth.instance.currentUser!.uid;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 233, 223, 190),
       appBar: AppBar(
         backgroundColor: Colors.black,
-        leading: const BackButton(
-          color: Colors.white,
-        ),
-        title: GradientText(
-          widget.name,
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-          gradient: LinearGradient(
-              colors: [Color.fromRGBO(228, 212, 156, 1), Color(0xffad9c00)]),
-        ),
-        actions: [
-          SizedBox(
-            width: 60,
-            height: 60,
-            child: Image.asset("assets/Horizon-Thumbnail-1024x576 copy.png"),
+        leading: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: const Icon(
+            Icons.arrow_back,
+            size: 30,
+            color: Colors.white,
           ),
-          const SizedBox(
-            width: 21,
-          )
-        ],
-      ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: ListView.builder(
-              reverse: true,
-              padding: const EdgeInsets.all(8.0),
-              itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                bool isUserMessage = _messages[index]['sender'] == 'user';
-                return _buildChatBubble(
-                    _messages[index]['text']!, isUserMessage);
-              },
+        ),
+        title: Row(
+          children: [
+            CircleAvatar(
+              radius: 20,
+              backgroundImage: NetworkImage(widget.profilepic),
             ),
-          ),
-          _buildMessageInput(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildChatBubble(String message, bool isUserMessage) {
-    return Align(
-      alignment: isUserMessage ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 5.0),
-        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-        decoration: BoxDecoration(
-          color: isUserMessage ? Colors.amber[600] : Colors.black,
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        child: Text(
-          message,
-          style: TextStyle(
-            color: isUserMessage ? Colors.black : Colors.white,
-            fontSize: 16.0,
-          ),
+            const SizedBox(
+              width: 15,
+            ),
+            Center(
+                child: Text(
+              widget.username,
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ))
+          ],
         ),
       ),
+      body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Expanded(
+          child: StreamBuilder(
+              stream: _chatService.getmessages(widget.receiverID, senderID),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Text("Error");
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Text("Loading");
+                }
+                // print(snapshot.data!.docs);
+                // print(
+                //     "warsetxrdcytgvjhbj1234567890ghcxvzxcvbn12345678901234567890-oiugfdgfzcv bnm,p09876ewaDc9t1234567890oiuytrew1234567890poiuytrewqasdfghjsdfghj");
+                return ListView(
+                    children: snapshot.data!.docs
+                        .map((doc) => _buildmessageItem(doc))
+                        .toList());
+              }),
+        ),
+        _buildMessageInput(),
+        SizedBox(
+          height: 10,
+        )
+      ]),
     );
   }
 
@@ -115,7 +111,7 @@ class _HorizonIndividualchatpageState extends State<HorizonIndividualchatpage> {
         children: <Widget>[
           Expanded(
             child: TextField(
-              controller: _controller,
+              controller: _messagecontroller,
               decoration: InputDecoration(
                 hintText: 'Type a message...',
                 hintStyle:
@@ -131,15 +127,28 @@ class _HorizonIndividualchatpageState extends State<HorizonIndividualchatpage> {
           ),
           const SizedBox(width: 10),
           IconButton(
-              onPressed: () {}, icon: const Icon(Icons.text_fields_outlined)),
-          const SizedBox(
-            width: 5,
-          ),
-          IconButton(
               icon: Icon(Icons.send, color: Colors.amber[600]),
-              onPressed: () => _sendMessage()),
+              onPressed: () => sendmessage()),
         ],
       ),
     );
+  }
+
+  Widget _buildmessageItem(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    final curid = FirebaseAuth.instance.currentUser!.uid;
+    bool isCurrentuser = data["senderID"] == curid;
+    var alignment =
+        isCurrentuser ? Alignment.centerRight : Alignment.centerLeft;
+
+    return Container(
+        alignment: alignment,
+        width: 200,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ChatBubble(isCurrentuser: isCurrentuser, message: data['message'])
+          ],
+        ));
   }
 }

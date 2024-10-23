@@ -176,11 +176,6 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           const SizedBox(width: 10),
           IconButton(
-              onPressed: () {}, icon: const Icon(Icons.text_fields_outlined)),
-          const SizedBox(
-            width: 5,
-          ),
-          IconButton(
               icon: Icon(Icons.send, color: Colors.amber[600]),
               onPressed: () => _sendMessage()),
         ],
